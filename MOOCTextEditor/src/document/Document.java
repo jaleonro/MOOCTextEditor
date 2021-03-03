@@ -4,8 +4,7 @@ package document;
  * A class that represents a text document
  * @author UC San Diego Intermediate Programming MOOC team
  */
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,7 +66,29 @@ public abstract class Document {
 		// TODO: Implement this method so that you can call it from the 
 	    // getNumSyllables method in BasicDocument (module 2) and 
 	    // EfficientDocument (module 3).
-	    return 0;
+		word = word.toLowerCase();
+		final Set<Character> VOWELS = new HashSet<>(Arrays.asList('a','e','i','o','u','y'));
+		boolean prevIsVowel = false;
+		int syllablesNum = 0;
+		for (int i=0; i<word.length(); i++) {
+			if(VOWELS.contains(word.charAt(i))){
+				if(!prevIsVowel && i != word.length()-1){
+					syllablesNum++;
+				}
+				if(!prevIsVowel && i == word.length()-1){
+					if(word.charAt(i) == 'e' && syllablesNum == 0){
+						syllablesNum++;
+					}
+					if(word.charAt(i) != 'e'){
+						syllablesNum++;
+					}
+				}
+				prevIsVowel = true;
+			}else{
+				prevIsVowel = false;
+			}
+		}
+	    return syllablesNum;
 	}
 	
 	/** A method for testing
@@ -132,7 +153,8 @@ public abstract class Document {
 	{
 	    // TODO: You will play with this method in week 1, and 
 		// then implement it in week 2
-	    return 0.0;
+		double score = 206.835 - (1.015 * ((double)getNumWords()/(double)getNumSentences())) - (84.6 * ((double)getNumSyllables()/(double)getNumWords()));
+	    return score;
 	}
 	
 	
